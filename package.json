@@ -1,0 +1,17 @@
+{
+  "name": "tic-tac-toe",
+  "version": "1.0.0",
+  "description": "Your challenge is to build out this Tic Tac Toe game and get it looking as close to the design as possible.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.69.2"
+  }
+}

@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Outfit', sans-serif;
+}
+
+html{
+    font-size: 62.5%;
+}
+
+
+// Variables
+$blueGreen : #31C3BD;
+$lightBlueGreen : #65E9E4;
+$amber: #F2B137;
+$lightAmber: #FFC860;
+$gunMetal: #1F3641;
+$darkGunMetal: #1A2A33;
+$pastelBlue : #A8BFC9;
+$azureishWhite: #DBE8ED;
+$bold: 700;
+
+
+// Body fonts
+@mixin body-md{
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: 0.08rem;
+}
+
+// Head fonts
+@mixin head-lg{
+    font-size: 4rem;
+    font-weight: $bold;
+    letter-spacing: 0.25rem;
+}
+@mixin head-md{
+    font-size: 2.4rem;
+    font-weight: $bold;
+    letter-spacing: 0.15rem;
+}
+@mixin head-sm{
+    font-size: 2rem;
+    font-weight: $bold;
+    letter-spacing: 0.125rem;
+}
+@mixin head-xs{
+    font-size: 1.6rem;
+    font-weight: $bold;
+    letter-spacing: 0.1rem;
+}
