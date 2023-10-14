@@ -3,30 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
-  
+  <link rel="stylesheet" href="css/index.css">
   <title>Frontend Mentor | Tic Tac Toe</title>
 </head>
 <body>
+  <main>
+    <div class="container">
+      <div class="header">
+          <img class="logo" src="assets/logo.svg" alt="X/O icon">
+        <span class="player-turn-info hidden">
+          <img class="playerlogo" src="assets/icon-x-white.svg" alt="X/O icon">
+          <p>turn</p>
+        </span>
+        <span class="restart hidden">
+          <img src="assets/icon-restart.svg" alt="restart icon">
+        </span>
+      </div>
+      <div class="body"></div>
+      <div class="footer">
+        <!-- New game menu btn -->
+        <div class="new-game">
+          <span class="new-game-vs-cpu">New Game (vs CPU)</span>
+          <span class="new-game-vs-player">New Game (vs player)</span>
+        </div>
+        <!-- New game menu btn end -->
 
-  <!-- New game menu start -->
+        <!-- Score Board start -->
+        <div class="score-board">
+          <div class="x-score-board">
+            <p class="p2-name">X (YOU)</p>
+            <p class="x-score-count">14</p>
+          </div>
+          <div class="tied-score-board">
+            <p>TIES</p>
+            <p class="tied-score-count">14</p>
+          </div>
+          <div class="o-score-board">
+            <p class="p1-name">O (CPU)</p>
+            <p class="o-score-count">14</p>
+          </div>
+        </div>
+        <!-- Score Board end -->
+      </div>
+    </div>
+  </main>
 
   Pick player 1's mark
   Remember: X goes first
 
-  New Game (vs CPU)
-  New Game (vs player)
-
-  <!-- New game menu end -->
-
-  <!-- Game board start -->
-
-  <!-- x/o icon --> turn
-
-  X (You) <!-- Your score -->
-  Ties <!-- Ties score -->
-  X (CPU) <!-- CPU score -->
 
   Oh no, you lost
   You won!

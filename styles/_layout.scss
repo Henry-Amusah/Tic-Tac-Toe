@@ -1,0 +1,115 @@
+.container{
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-height: 60vh;
+  width: 48rem;
+  border: .2rem solid;
+
+  .header{
+    width: 100%;
+    height: 10rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .player-turn-info{
+      width: 15rem;
+      height: 5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      @include btn($lightGunMetal);
+      @include shadow($color: darken($gunMetal, 5));
+      
+
+      img{
+        width: 2.2rem;
+        margin-right: 1rem;
+      }
+
+      p{
+        text-transform: uppercase;
+        @include head-sm();
+      }
+    }
+
+    .restart{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 5rem;
+      height: 4.8rem;
+      cursor: pointer;
+      @include btn($bg-color: $pastelBlue);
+      @include shadow($color: darken($pastelBlue, 30));
+      @include hover($color: $azureishWhite);
+    }
+  }
+
+  .new-game{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+
+    .new-game-vs-cpu, .new-game-vs-player{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 7rem;
+      color: #000;
+      text-transform: uppercase;
+      cursor: pointer;
+      @include head-md();
+    }
+    .new-game-vs-cpu{
+      margin-bottom: 3rem;
+      @include btn($amber, $b-radius: 1.5rem);
+      @include shadow($offset-y: 0.7rem, $color: darken($amber, 18));
+      @include hover($color: $lightAmber);
+    }
+    .new-game-vs-player{
+      margin-bottom: 3rem;
+      @include btn($blueGreen, $b-radius: 1.5rem);
+      @include shadow($offset-y: 0.7rem, $color: darken($blueGreen, 18));
+      @include hover($color: $lightBlueGreen);
+    }
+  }
+
+  .score-board{
+    display: flex;
+    justify-content: space-between;
+
+    .x-score-board, .tied-score-board, .o-score-board{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 14rem;
+      height: 7rem;
+      color: #000;
+      @include body-md();
+    }
+
+    .x-score-board{
+      @include btn($blueGreen, $b-radius: 1.5rem);
+    }
+
+    .tied-score-board{
+      @include btn($pastelBlue, $b-radius: 1.5rem);
+    }
+
+    .o-score-board {
+      @include btn($amber, $b-radius: 1.5rem);
+    }
+
+    .x-score-count, .tied-score-count, .o-score-count{
+      @include head-md();
+    }
+  }
+}
