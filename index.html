@@ -11,7 +11,7 @@
   <main>
     <div class="container">
       <div class="header">
-          <img class="logo" src="assets/logo.svg" alt="X/O icon">
+          <img class="logo center" src="assets/logo.svg" alt="X/O icon">
         <span class="player-turn-info hidden">
           <img class="playerlogo" src="assets/icon-x-white.svg" alt="X/O icon">
           <p>turn</p>
@@ -20,7 +20,16 @@
           <img src="assets/icon-restart.svg" alt="restart icon">
         </span>
       </div>
-      <div class="body"></div>
+      <div class="body">
+        <div class="player-select-board">
+          <p>Pick player 1's mark</p>
+          <div class="player-select-option">
+            <span class="x-mark bg-hover"><img src="assets/icon-x-white.svg" alt="o-icon"></span>
+            <span class="o-mark bg-toggle"><img src="assets/icon-o-outline-white.svg" alt="x-icon"></span>
+          </div>
+          <p>Remember: X goes first</p>
+        </div>
+      </div>
       <div class="footer">
         <!-- New game menu btn -->
         <div class="new-game">
@@ -30,7 +39,7 @@
         <!-- New game menu btn end -->
 
         <!-- Score Board start -->
-        <div class="score-board">
+        <div class="score-board hidden">
           <div class="x-score-board">
             <p class="p2-name">X (YOU)</p>
             <p class="x-score-count">14</p>
@@ -49,8 +58,8 @@
     </div>
   </main>
 
-  Pick player 1's mark
-  Remember: X goes first
+  
+  
 
 
   Oh no, you lost

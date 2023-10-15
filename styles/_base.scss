@@ -80,3 +80,13 @@ html{
 .hidden{
     display: none !important;
 }
+.center{
+    position: absolute;
+    left: 44%;
+}
+.bg-toggle{
+    background-color: $pastelBlue;
+}
+.bg-hover{
+    @include hover($color: lighten($gunMetal, 3));
+}
