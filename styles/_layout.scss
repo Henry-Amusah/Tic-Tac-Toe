@@ -3,7 +3,7 @@
   top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-height: 60vh;
+  min-height: 70vh;
   width: 48rem;
   border: .2rem solid;
 
@@ -109,13 +109,40 @@
       @include btn($amber, $b-radius: 1.5rem);
     }
 
-    .x-score-count, .tied-score-count, .o-score-count{
+    .x-score-value, .tied-score-value, .o-score-value{
       @include head-md();
     }
   }
 
   .body{
     width: 100%;
+
+    .grid{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+
+      .cell{
+        width: 14rem;
+        height: 13rem;
+        background-color: $lightGunMetal;
+        // padding: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 3rem;
+        border-radius: 1.5rem;
+        cursor: pointer;
+        @include shadow($offset-y: 0.8rem, $color: darken($gunMetal, 5));
+
+        &:not(:nth-child(3)):not(:nth-child(6)):not(:nth-child(9)){
+          margin-right: 2.5rem;
+        }
+      }
+    }
 
     .player-select-board{
       background-color: $lightGunMetal;

@@ -37,7 +37,7 @@ html {
   top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-height: 60vh;
+  min-height: 70vh;
   width: 48rem;
   border: 0.2rem solid;
 }
@@ -150,13 +150,36 @@ html {
   border-radius: 1.5rem;
   background-color: #F2B137;
 }
-.container .score-board .x-score-count, .container .score-board .tied-score-count, .container .score-board .o-score-count {
+.container .score-board .x-score-value, .container .score-board .tied-score-value, .container .score-board .o-score-value {
   font-size: 2.4rem;
   font-weight: 700;
   letter-spacing: 0.15rem;
 }
 .container .body {
   width: 100%;
+}
+.container .body .grid {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.container .body .grid .cell {
+  width: 14rem;
+  height: 13rem;
+  background-color: #1F3641;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 0.8rem 0 0 #111c22;
+}
+.container .body .grid .cell:not(:nth-child(3)):not(:nth-child(6)):not(:nth-child(9)) {
+  margin-right: 2.5rem;
 }
 .container .body .player-select-board {
   background-color: #1F3641;
