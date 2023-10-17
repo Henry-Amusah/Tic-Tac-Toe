@@ -2,6 +2,7 @@
 
 const logo  = document.querySelector('.logo');
 const infoBoard = document.querySelector('.player-turn-info');
+const infoLogo = infoBoard.querySelector('.playerlogo');
 const restartBtn = document.querySelector('.restart');
 const gameBoard = document.querySelector('.body');
 const gridContainer = gameBoard.querySelector('.grid');
@@ -21,10 +22,11 @@ let leftScoreCount = Number(leftScoreValue.textContent);
 let rightScoreCount = Number(rightScoreValue.textContent);
 let tieScoreCount = Number(tieScoreValue.textContent);
 leftScoreCount = 0;
-tieScoreCount = 0
-rightScoreCount = 0
+tieScoreCount = 0;
+rightScoreCount = 0;
 
 let p1_symbol = 'O', p2_symbol, cpu_symbol;
+let startSymbol = 'x';
 
 class Game {
   constructor(){
@@ -65,14 +67,24 @@ class Game {
     //console.log(p1);
   }
   
-  switchTurn(){}
+  switchTurn(e){
+    const { target } = e;
+    if(target.childElementCount === 0 && target.getAttribute('src') === null){
+      const markDisplay = document.createElement('img');
+      markDisplay.setAttribute('src', `assets/icon-${startSymbol}.svg`);
+      target.append(markDisplay);
+      startSymbol = startSymbol === 'x' ? 'o' : 'x';
+      infoLogo.setAttribute('src', `assets/icon-${startSymbol}-white.svg`);
+    }
+    target.removeEventListener('click', this.switchTurn);
+  }
 
   initGameBoard(){
     const grid = Array(9).fill('').forEach((cell, idx) => {
       const gridCell = document.createElement('div');
       gridCell.classList.add('cell');
       gridCell.id = idx;
-      gridCell.addEventListener('click', this.switchTurn);
+      gridCell.addEventListener('click', this.switchTurn.bind(this));
       gridContainer.append(gridCell);
     });
   }
