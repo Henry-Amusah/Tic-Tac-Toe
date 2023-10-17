@@ -64,6 +64,18 @@ class Game {
     }
     //console.log(p1);
   }
+  
+  switchTurn(){}
+
+  initGameBoard(){
+    const grid = Array(9).fill('').forEach((cell, idx) => {
+      const gridCell = document.createElement('div');
+      gridCell.classList.add('cell');
+      gridCell.id = idx;
+      gridCell.addEventListener('click', this.switchTurn);
+      gridContainer.append(gridCell);
+    });
+  }
 
 
   newGame(e){
@@ -102,8 +114,10 @@ class Game {
     });
     logo.classList.remove('center');
 
+    this.initGameBoard();
   };
 
+  restartGame(){}
 }
 
 const game = new Game();
