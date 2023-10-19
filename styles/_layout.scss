@@ -5,7 +5,7 @@
   transform: translate(-50%, -50%);
   min-height: 70vh;
   width: 48rem;
-  border: .2rem solid;
+  // border: .2rem solid;
 
   .header{
     position: relative;
@@ -175,15 +175,77 @@
         padding: 1rem 1rem;
         cursor: pointer;
 
-        .o-mark, .x-mark{
-          width: 50%;
-          padding: 1rem 0;
-          border-radius: 1rem;
+      .o-mark, .x-mark{
+        width: 50%;
+        padding: 1rem 0;
+        border-radius: 1rem;
           
-          img{
-            width: 3.5rem;
-          }
+      img{
+        width: 3.5rem;
         }
+      }
+    }
+  }
+}
+
+.popup-wrapper{
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.3);
+
+  .popup{
+    background-color: $lightGunMetal;
+    width: 100%;
+    height: 28vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    // text-align: center;
+    
+    .msg-1{
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      @include head-xs();
+    }
+
+    .declaration{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 4rem;
+
+      p{
+        text-transform: uppercase;
+        margin-left: 2rem;
+        color: $amber;
+        @include head-lg();
+      }
+    }
+
+    .action-btn-1, .action-btn-2{
+      color: #000;
+      padding: 1.5rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      @include head-xs();
+    }
+
+    .action-btn-1{
+      margin-right: 1.5rem;
+      @include btn($pastelBlue);
+      @include shadow($color: darken($pastelBlue, 30));
+      @include hover($azureishWhite);
+    }
+
+    .action-btn-2{
+      @include btn($amber);
+      @include shadow($color: darken($amber, 18));
+      @include hover($lightAmber);
     }
   }
 }
