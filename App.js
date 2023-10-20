@@ -73,6 +73,22 @@ class Game {
       const markDisplay = document.createElement('img');
       markDisplay.setAttribute('src', `assets/icon-${startSymbol}.svg`);
       target.append(markDisplay);
+      target.addEventListener('mouseenter', () => {
+        if(target.children[0].getAttribute('src').includes('-o.svg')){
+          target.children[0].setAttribute('src', `assets/icon-o-outline.svg`);
+        } 
+        if(target.children[0].getAttribute('src').includes('-x.svg')){
+          target.children[0].setAttribute('src', `assets/icon-x-outline.svg`);
+        }
+      });
+      target.addEventListener('mouseleave', () => {
+        if(target.children[0].getAttribute('src').includes('-o-outline.svg')){
+          target.children[0].setAttribute('src', `assets/icon-o.svg`)
+        }
+        if(target.children[0].getAttribute('src').includes('-x-outline.svg')){
+          target.children[0].setAttribute('src', `assets/icon-x.svg`);
+        }
+      });
       startSymbol = startSymbol === 'x' ? 'o' : 'x';
       infoLogo.setAttribute('src', `assets/icon-${startSymbol}-white.svg`);
     }
@@ -129,7 +145,7 @@ class Game {
     this.initGameBoard();
   };
 
-  restartGame(){}
+  restartGame(){};
 }
 
 const game = new Game();
