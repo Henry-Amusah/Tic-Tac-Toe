@@ -25,12 +25,20 @@ const leftScoreValue = document.querySelector('.x-score-board .x-score-value');
 const rightScoreValue = document.querySelector('.o-score-board .o-score-value');
 const tieScoreValue = document.querySelector('.tied-score-value');
 
-let leftScoreCount = Number(leftScoreValue.textContent);
-let rightScoreCount = Number(rightScoreValue.textContent);
-let tieScoreCount = Number(tieScoreValue.textContent);
-leftScoreCount = 0;
-tieScoreCount = 0;
-rightScoreCount = 0;
+// let gridCells;
+
+// let leftScoreCount = Number(leftScoreValue.textContent);
+// let rightScoreCount = Number(rightScoreValue.textContent);
+// let tieScoreCount = Number(tieScoreValue.textContent);
+// leftScoreCount = 0;
+// tieScoreCount = 0;
+// rightScoreCount = 0;
+
+let gameScores = {
+  leftScoreCount: Number(leftScoreValue.textContent),
+  rightScoreCount: Number(rightScoreValue.textContent),
+  tieScoreCount: Number(tieScoreValue.textContent)
+}
 
 let p1_symbol = 'O', p2_symbol, cpu_symbol;
 let startSymbol = 'x';
@@ -40,6 +48,17 @@ class Game {
   constructor(){
     playerSelectOption.addEventListener('click', this.togglePlayerLogo.bind(this));
     newGameBtn.addEventListener('click', this.newGame.bind(this));
+    // actionBtn1.addEventListener('click', this.endGame);
+    // actionBtn2.addEventListener('click', () => location.reload());
+    restartBtn.addEventListener('click', this.restartGame);
+    //window.addEventListener('DOMContentLoaded', () => this.loadGameState());
+
+    let data = window.performance.getEntriesByType('navigation')[0].type;
+    if(data === 'reload'){
+      this.loadGameState();
+      console.log('Page reloaded')
+    }
+    console.log(data);
   }
 
   activatePlayer(bg, playerSymbol){
@@ -100,9 +119,36 @@ class Game {
       startSymbol = startSymbol === 'x' ? 'o' : 'x';
       infoLogo.setAttribute('src', `assets/icon-${startSymbol}-white.svg`);
     }
+    // if(vs_cpu) this.cpuPlay(cpu_symbol.toLocaleLowerCase());
     target.removeEventListener('click', this.switchTurn);
     this.checkWinner();
   }
+
+  cpuPlay(player){
+    const markDisplay = document.createElement('img');
+    //player = p1_symbol === 'x' ? 'o' : 'x';
+    markDisplay.setAttribute('src', `assets/icon-${player}.svg`);
+    this.bestSpot().append(markDisplay);
+    //infoLogo.setAttribute('src', `assets/icon-${p1_symbol}-white.svg`)
+  }
+
+  emptySpot(){
+    return Array.from(gridCells).filter(cell => cell.childElementCount < 1);
+  }
+
+  bestSpot(){
+    return this.emptySpot()[0];
+  }
+
+//   document.addEventListener("DOMContentLoaded", (event) => {
+//   const inGame = loadData()
+//   if(inGame){ // true
+// // fetch array elements and render
+//   }else {
+
+//   }
+//   console.log("DOM fully loaded and parsed");
+// });
 
   initGameBoard(){
     const grid = Array(9).fill('').forEach((cell, idx) => {
@@ -111,15 +157,46 @@ class Game {
       gridCell.id = idx;
       gridCell.addEventListener('click', this.switchTurn.bind(this));
       gridContainer.append(gridCell);
+      //console.log(gridContainer.innerHTML)
+      //console.log(gridCells)
+      // localStorage.setItem('cells', gridContainer.innerHTML);
+      // console.log(gridCell)
     });
   }
 
+  restartGame(){
+    message1.remove();
+    winnerIcon.remove();
+    message2.innerHTML = 'Restart game?'
+    message2.style.color = '#A8BFC9'
+    popup.classList.remove('hidden');
+    actionBtn1.textContent = 'No, cancel';
+    actionBtn2.textContent = 'Yes, restart';
+
+    popup.addEventListener('click', e => {
+      if(e.target.textContent === 'No, cancel'){
+        popup.classList.add('hidden');
+        console.log('game continues');
+      }
+      if(e.target.textContent === 'Yes, restart'){
+        location.reload();
+        console.log('game starts');
+      }
+    })
+    //location.reload();
+  }
+
+  endGame(){
+    localStorage.clear();
+    location.reload();
+  }
 
   newGame(e){
     const { target } = e;
     if(target.classList.contains('new-game-vs-cpu')){
       cpu_symbol = p1_symbol === 'X' ? 'O' : 'X';
       if(p1_symbol === 'X'){
+        // localStorage.setItem('p1_symbol', p1_symbol)
         leftPlayerName.textContent = `${p1_symbol} (YOU)`;
         rightPlayerName.textContent = `${cpu_symbol} (CPU)`;
       }else {
@@ -143,9 +220,6 @@ class Game {
       vs_player = true;
       vs_cpu = false;
     }
-    leftScoreValue.textContent = leftScoreCount;
-    tieScoreValue.textContent = tieScoreCount; 
-    rightScoreValue.textContent = rightScoreCount;
 
     [scoreBoard, gridContainer, infoBoard, restartBtn].forEach(item => {
       item.classList.remove('hidden');
@@ -156,7 +230,132 @@ class Game {
     logo.classList.remove('center');
 
     this.initGameBoard();
+    this.saveGameState();
+
+   let { leftScoreCount, tieScoreCount, rightScoreCount } = JSON.parse(localStorage.getItem('gameScores'));
+    leftScoreValue.textContent = leftScoreCount;
+    tieScoreValue.textContent = tieScoreCount; 
+    rightScoreValue.textContent = rightScoreCount;
   };
+
+  saveGameState(){
+    let visibleElement = [scoreBoard, gridContainer, infoBoard, restartBtn].every(element => {
+      return element.classList.contains('hidden');
+    });
+    if(!visibleElement){
+      localStorage.setItem('visibleElement', true);
+    } else{
+      localStorage.removeItem('visibleElement');
+    }
+
+    let hiddenElement = [newGameBtn, playerSelectBoard].every(element => {
+      return element.classList.contains('hidden');
+    });
+    if(hiddenElement){
+      localStorage.setItem('hiddenElement', true);
+    } else{
+      localStorage.removeItem('hiddenElement');
+    }
+
+    let centeredLogo = logo.classList.contains('center');
+    if(!centeredLogo){
+      localStorage.setItem('centeredLogo', true);
+    } else{
+      localStorage.removeItem('centeredLogo');
+    }
+
+    if(gridContainer.innerHTML){
+      localStorage.setItem('grid', gridContainer.innerHTML);
+    }
+
+    if(vs_cpu){
+      let playerState = {
+        cpu_symbol: p1_symbol === 'X' ? 'O' : 'X',
+        p1_symbol: cpu_symbol === 'X' ? 'O': 'X',
+        vs_cpu
+      }
+      localStorage.setItem('playerState', JSON.stringify(playerState));
+    } else{
+      let playerState = {
+        p1_symbol: p2_symbol === 'X' ? 'O' : 'X',
+        p2_symbol: p1_symbol === 'X' ? 'O' : 'X',
+        vs_player
+      }
+      localStorage.setItem('playerState', JSON.stringify(playerState));
+    }
+
+    localStorage.setItem('gameScores', JSON.stringify(gameScores));
+    //localStorage.setItem('gridCells', JSON.stringify(gridCells))
+    // localStorage.setItem('cells', gridContainer.innerHTML);
+    
+  }
+
+  loadGameState(){
+    if(localStorage.getItem('visibleElement')){
+      [scoreBoard, gridContainer, infoBoard, restartBtn].forEach(element => {
+        element.classList.remove('hidden');
+      });
+    }
+
+    if(localStorage.getItem('hiddenElement')){
+      [newGameBtn, playerSelectBoard].forEach(element => {
+        element.classList.add('hidden');
+      });
+    }
+
+    if(localStorage.getItem('centeredLogo')){
+      logo.classList.remove('center');
+    }
+
+    if(localStorage.getItem('playerState')){
+      let playerState = JSON.parse(localStorage.getItem('playerState'));
+      if(playerState.vs_cpu){
+        if(playerState.p1_symbol === 'X'){
+          leftPlayerName.textContent = `${playerState.p1_symbol} (YOU)`;
+          rightPlayerName.textContent = `${playerState.cpu_symbol} (CPU)`;
+        } else{
+          rightPlayerName.textContent = `${playerState.p1_symbol} (YOU)`;
+          leftPlayerName.textContent = `${playerState.cpu_symbol} (CPU)`;
+        }
+      } else{
+        if(playerState.p1_symbol === 'X'){
+          leftPlayerName.textContent = `${playerState.p1_symbol} (P1)`;
+          rightPlayerName.textContent = `${playerState.p2_symbol} (P2)`;
+        } else{
+          rightPlayerName.textContent = `${playerState.p1_symbol} (P1)`;
+          leftPlayerName.textContent = `${playerState.p2_symbol} (P2)`;
+        }
+      }
+    }
+
+    if(localStorage.getItem('gameScores')){
+      let gameScores = JSON.parse(localStorage.getItem('gameScores'));
+      leftScoreValue.textContent = `${gameScores.leftScoreCount}`;
+      rightScoreValue.textContent = `${gameScores.rightScoreCount}`;
+      tieScoreValue.textContent = `${gameScores.tieScoreCount}`;
+    }
+
+    if(localStorage.getItem('grid')){
+      let grid = localStorage.getItem('grid');
+      
+      //grid.addEventListener('click', this.switchTurn.bind(this))
+      gridContainer.innerHTML = grid;
+      let gridCells = gridContainer.querySelectorAll('.cell')
+      gridCells.forEach(cell => cell.addEventListener('click', this.switchTurn.bind(this)));
+    }
+
+    //gridContainer.innerHTML = localStorage.getItem('cells')
+  }
+
+  fetchGameScore(){
+    return JSON.parse(localStorage.getItem('gameScores'));
+  }
+  updateGameScore(gameScores){
+    localStorage.setItem('gameScores', JSON.stringify(gameScores));
+  }
+  fetchPlayerState(){
+    return JSON.parse(localStorage.getItem('playerState'));
+  }
 
   checkWinner(){
     const gridCells = document.querySelectorAll('.cell');
@@ -187,12 +386,18 @@ class Game {
         });
         console.log(`X wins with ${combo} combinations`);
         gridCells.forEach(cellElement => cellElement.replaceWith(cellElement.cloneNode(true)));
-        leftScoreCount++;
-        leftScoreValue.textContent = leftScoreCount;
+
+        let gameScores = this.fetchGameScore();
+        // gameScores.leftScoreCount += 1;
+        leftScoreValue.textContent = gameScores.leftScoreCount += 1;
+        this.updateGameScore(gameScores);
+        console.log(gameScores);
+
         infoLogo.setAttribute('src', 'assets/icon-x-white.svg');
-        popup.classList.remove('hidden');
         
         // checking if game is between player and cpu
+        const playerState = this.fetchPlayerState();
+        const { vs_cpu, p1_symbol, cpu_symbol } = playerState;
         if(vs_cpu){
           if(cpu_symbol === 'X'){
             // cpu won against you with X mark
@@ -222,6 +427,7 @@ class Game {
             console.log(`player 2 wins....${p2_symbol} takes the round`)
           }
         }
+        popup.classList.remove('hidden');
         return;
       }
       // Declaring win for O mark
@@ -232,12 +438,17 @@ class Game {
           gridCells[cell].children[0].setAttribute('src', 'assets/icon-o-outline-white.svg')
         });
         gridCells.forEach(cellElement => cellElement.replaceWith(cellElement.cloneNode(true)));
-        rightScoreCount++;
-        rightScoreValue.textContent = rightScoreCount;
+
+        let gameScores = this.fetchGameScore();
+        rightScoreValue.textContent = gameScores.rightScoreCount += 1;
+        this.updateGameScore(gameScores);
+        console.log(gameScores);
+
         infoLogo.setAttribute('src', 'assets/icon-o-white.svg');
-        popup.classList.remove('hidden');
 
         // checking if game is between player and cpu
+        const playerState = this.fetchPlayerState();
+        const { vs_cpu, p1_symbol, cpu_symbol } = playerState;
         if(vs_cpu){
           if(cpu_symbol === 'O'){
             // cpu won against you with O mark
@@ -262,13 +473,12 @@ class Game {
           } else{
             // player 2 won against player 1 with O mark
             message1.textContent = 'player 2 wins!';
-            winnerIcon.setAttr   // if(X_win === false && O_win === false){
-    //   alert('tied')
-    // }ibute('src', 'assets/icon-o.svg');
+            winnerIcon.setAttribute('src', 'assets/icon-o.svg');   
             message2.style.color = '#F2B137';
             console.log(`player 2 wins....${p2_symbol} takes the round`)
           }
         }
+        popup.classList.remove('hidden');
         console.log('O wins');
         return;
       } 
@@ -280,19 +490,20 @@ class Game {
     });
     if(tied){
       gridCells.forEach(cellElement => cellElement.replaceWith(cellElement.cloneNode(true)));
-      tieScoreCount++;
-      tieScoreValue.textContent = tieScoreCount;
-      popup.classList.remove('hidden');
-      message1.classList.add('hidden');
-      winnerIcon.classList.add('hidden');
-      message2.style.color = '#A8BFC9';
-      message2.textContent = 'Round tied';
-      console.log('tied score');
+      let gameScores = this.fetchGameScore();
+        tieScoreValue.textContent = gameScores.tieScoreCount += 1;
+        this.updateGameScore(gameScores);
+       
+        // Display popup
+        message1.classList.add('hidden');
+        winnerIcon.classList.add('hidden');
+        message2.style.color = '#A8BFC9';
+        message2.textContent = 'Round tied';
+        popup.classList.remove('hidden');
+        console.log('tied score');
     };
 
   };
-
-  restartGame(){};
 }
 
 const game = new Game();
