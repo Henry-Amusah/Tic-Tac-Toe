@@ -42,7 +42,7 @@ html {
 }
 .container .header {
   position: relative;
-  width: 100%;
+  width: 98%;
   height: 10rem;
   display: flex;
   justify-content: space-between;
@@ -123,7 +123,7 @@ html {
 }
 .container .score-board {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 .container .score-board .x-score-board, .container .score-board .tied-score-board, .container .score-board .o-score-board {
   display: flex;
@@ -140,10 +140,12 @@ html {
 .container .score-board .x-score-board {
   border-radius: 1.5rem;
   background-color: #31C3BD;
+  margin-right: 2.5rem;
 }
 .container .score-board .tied-score-board {
   border-radius: 1.5rem;
   background-color: #A8BFC9;
+  margin-right: 2.5rem;
 }
 .container .score-board .o-score-board {
   border-radius: 1.5rem;
@@ -285,4 +287,62 @@ html {
 }
 .popup-wrapper .popup .action-btn-2:hover {
   background-color: #FFC860;
+}
+
+@media screen and (max-width: 520px) {
+  html {
+    font-size: 55%;
+  }
+  .body .grid .cell img {
+    width: 7rem;
+  }
+  .popup-wrapper .popup .declaration .winner-icon {
+    width: 4rem;
+  }
+}
+@media screen and (max-width: 470px) {
+  html {
+    font-size: 50%;
+  }
+}
+@media screen and (max-width: 420px) {
+  html {
+    font-size: 45%;
+  }
+  .container .header .restart img {
+    width: 2.5rem;
+  }
+  .popup-wrapper .popup {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@media screen and (max-width: 370px) {
+  html {
+    font-size: 40%;
+  }
+}
+@media screen and (max-width: 320px) {
+  html {
+    font-size: 35%;
+  }
+  .popup-wrapper .popup {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+@media screen and (max-width: 290px) {
+  html {
+    font-size: 30%;
+  }
+  .popup-wrapper .popup {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }

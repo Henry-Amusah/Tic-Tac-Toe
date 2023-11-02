@@ -9,7 +9,7 @@
 
   .header{
     position: relative;
-    width: 100%;
+    width: 98%;
     height: 10rem;
     display: flex;
     justify-content: space-between;
@@ -84,7 +84,7 @@
 
   .score-board{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 
     .x-score-board, .tied-score-board, .o-score-board{
       display: flex;
@@ -99,10 +99,12 @@
 
     .x-score-board{
       @include btn($blueGreen, $b-radius: 1.5rem);
+      margin-right: 2.5rem;
     }
 
     .tied-score-board{
       @include btn($pastelBlue, $b-radius: 1.5rem);
+      margin-right: 2.5rem;
     }
 
     .o-score-board {
@@ -205,7 +207,6 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    // text-align: center;
     
     .msg-1{
       text-transform: uppercase;
@@ -247,5 +248,74 @@
       @include shadow($color: darken($amber, 18));
       @include hover($lightAmber);
     }
+  }
+}
+
+@media screen and (max-width: 520px){
+  html{
+    font-size: 55%;
+  }
+  .body .grid .cell img{
+    width: 7rem;
+  }
+  .popup-wrapper .popup .declaration .winner-icon{
+    width: 4rem;
+  }
+}
+
+@media screen and (max-width: 470px){
+  html{
+    font-size: 50%;
+  }
+
+  // .popup-wrapper .popup{
+  //  // position: absolute;
+  //   top: 20%;
+  // }
+}
+
+@media screen and (max-width: 420px){
+  html{
+    font-size: 45%;
+  }
+  .container .header .restart img{
+    width: 2.5rem;
+  }
+  .popup-wrapper .popup {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media screen and (max-width: 370px){
+  html{
+    font-size: 40%;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  html {
+    font-size: 35%;
+  }
+  .popup-wrapper .popup {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media screen and (max-width: 290px) {
+  html {
+    font-size: 30%;
+  }
+
+  .popup-wrapper .popup{
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
