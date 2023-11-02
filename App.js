@@ -165,9 +165,9 @@ class Game {
   }
 
   restartGame(){
-    message1.remove();
-    winnerIcon.remove();
-    message2.innerHTML = 'Restart game?'
+    message1.classList.add('hidden');
+    winnerIcon.classList.add('hidden');
+    message2.textContent = 'Restart game?'
     message2.style.color = '#A8BFC9'
     popup.classList.remove('hidden');
     actionBtn1.textContent = 'No, cancel';
@@ -358,6 +358,7 @@ class Game {
   }
 
   checkWinner(){
+    this.checkRestartBeforeWin();
     const gridCells = document.querySelectorAll('.cell');
     // let X_win, O_win;
     // console.log(gridCells[1].children[0].getAttribute('src').includes('icon-x.svg'));
@@ -398,6 +399,7 @@ class Game {
         // checking if game is between player and cpu
         const playerState = this.fetchPlayerState();
         const { vs_cpu, p1_symbol, cpu_symbol } = playerState;
+        
         if(vs_cpu){
           if(cpu_symbol === 'X'){
             // cpu won against you with X mark
@@ -501,9 +503,33 @@ class Game {
         message2.textContent = 'Round tied';
         popup.classList.remove('hidden');
         console.log('tied score');
-    };
+    }
+
+    popup.addEventListener('click', e => {
+      if(e.target.textContent === 'Quit'){
+        localStorage.clear();
+        location.reload();
+      }
+      if(e.target.textContent === 'Next round'){
+        location.reload();
+      }
+    })
 
   };
+
+  checkRestartBeforeWin(){
+    /*
+      this function checks whether was 
+      clicked before a win was detected
+    */
+    if(message1.classList.contains('hidden') && winnerIcon.classList.contains('hidden')){
+      message1.classList.remove('hidden');
+      winnerIcon.classList.remove('hidden');
+      message2.textContent = 'takes the round';
+      actionBtn1.textContent = 'Quit';
+      actionBtn2.textContent = 'Next round';
+    }
+  }
 }
 
 const game = new Game();
