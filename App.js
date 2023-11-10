@@ -96,8 +96,9 @@ class Game {
   
   switchTurn(e){
     const { target } = e;
+    const playerState = this.fetchPlayerState();
+    const markDisplay = document.createElement('img');
     if(target.childElementCount === 0 && target.getAttribute('src') === null){
-      const markDisplay = document.createElement('img');
       markDisplay.setAttribute('src', `assets/icon-${startSymbol}.svg`);
       target.append(markDisplay);
       target.addEventListener('mouseenter', () => {
@@ -119,20 +120,74 @@ class Game {
       startSymbol = startSymbol === 'x' ? 'o' : 'x';
       infoLogo.setAttribute('src', `assets/icon-${startSymbol}-white.svg`);
     }
-    // if(vs_cpu) this.cpuPlay(cpu_symbol.toLocaleLowerCase());
+    
     target.removeEventListener('click', this.switchTurn);
     this.checkWinner();
   }
 
-  cpuPlay(player){
-    const markDisplay = document.createElement('img');
-    //player = p1_symbol === 'x' ? 'o' : 'x';
-    markDisplay.setAttribute('src', `assets/icon-${player}.svg`);
-    this.bestSpot().append(markDisplay);
+  cpuPlay(){
+    //const { target } = e;
+    const playerState = this.fetchPlayerState();
+    const gridCells = gridContainer.querySelectorAll('.cell');
+    const cpuSymbol = playerState.cpu_symbol.toLowerCase();
+    const playerSymbol = playerState.p1_symbol.toLowerCase();
+    let startPlayer = cpuSymbol === 'x' ? cpuSymbol : playerSymbol;
+    let isCpuTurn = true;
+    
+    // if(cpuSymbol === 'x'){
+    //   cpuTurn();
+    // } else {
+    //   playerTurn();
+    // }
+
+    let cpuTurn = () => {
+      const markDisplay = document.createElement('img');
+      setTimeout(() => {
+        markDisplay.setAttribute('src', `assets/icon-${cpuSymbol}.svg`);
+        this.bestSpot().append(markDisplay);
+        infoLogo.setAttribute('src', `assets/icon-${playerSymbol}-white.svg`);
+        isCpuTurn = false;
+        console.log(isCpuTurn)
+        humanPlayerTurn();
+      }, 3000);
+    }
+
+    let humanPlayerTurn = () => {
+      this.emptySpot().forEach(cell => cell.addEventListener('click', e => {
+        const playerMarkDisplay = document.createElement('img');
+        const { target } = e;
+        if(target.childElementCount === 0 && target.getAttribute('src') === null){
+          playerMarkDisplay.setAttribute('src', `assets/icon-${playerSymbol}.svg`);
+          target.append(playerMarkDisplay);
+          infoLogo.setAttribute('src', `assets/icon-${cpuSymbol}-white.svg`);
+          cpuTurn();
+        } 
+      }));
+      isCpuTurn = true;
+    }
+
+     if(cpuSymbol === 'x'){
+      cpuTurn();
+    } else {
+      humanPlayerTurn();
+    }
+
+    // if(isCpuTurn === true && cpuSymbol === 'x'){
+    //   // cpu plays first
+    //   setTimeout(cpuTurn, 3000);
+    // }
+      // player one plays first
+      
+      
     //infoLogo.setAttribute('src', `assets/icon-${p1_symbol}-white.svg`)
+    console.log(cpuSymbol)
+    console.log(gridCells)
+    console.log(isCpuTurn)
+    return isCpuTurn
   }
 
   emptySpot(){
+    const gridCells = document.querySelectorAll('.cell');
     return Array.from(gridCells).filter(cell => cell.childElementCount < 1);
   }
 
@@ -140,22 +195,19 @@ class Game {
     return this.emptySpot()[0];
   }
 
-//   document.addEventListener("DOMContentLoaded", (event) => {
-//   const inGame = loadData()
-//   if(inGame){ // true
-// // fetch array elements and render
-//   }else {
-
-//   }
-//   console.log("DOM fully loaded and parsed");
-// });
+  playEvent = vs_player ? this.switchTurn : this.cpuPlay
 
   initGameBoard(){
     const grid = Array(9).fill('').forEach((cell, idx) => {
       const gridCell = document.createElement('div');
       gridCell.classList.add('cell');
       gridCell.id = idx;
-      gridCell.addEventListener('click', this.switchTurn.bind(this));
+      // gridCell.addEventListener('click', this.playEvent.bind(this));
+      if(vs_player){
+        gridCell.addEventListener('click', this.switchTurn.bind(this));
+      } else {
+        this.cpuPlay.bind(this)
+      }
       gridContainer.append(gridCell);
       //console.log(gridContainer.innerHTML)
       //console.log(gridCells)
@@ -232,10 +284,15 @@ class Game {
     this.initGameBoard();
     this.saveGameState();
 
+    // fetching and rendering game score values
    let { leftScoreCount, tieScoreCount, rightScoreCount } = JSON.parse(localStorage.getItem('gameScores'));
     leftScoreValue.textContent = leftScoreCount;
     tieScoreValue.textContent = tieScoreCount; 
     rightScoreValue.textContent = rightScoreCount;
+
+    // if(vs_cpu && this.fetchPlayerState().cpu_symbol === 'X'){
+    //   setTimeout(this.cpuPlay(), 2000);
+    // }
   };
 
   saveGameState(){
