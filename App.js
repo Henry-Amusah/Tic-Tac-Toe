@@ -45,11 +45,14 @@ let gameScores = {
 let p1_symbol = 'O', p2_symbol, cpu_symbol;
 let startSymbol = 'x';
 let vs_cpu, vs_player;
+let minimaxScore;
+let gameWon;
+let origBoard = [...Array(9).keys()];
 
 class Game {
   constructor(){
-    this.minimaxScore;
-    this.gameWon;
+    // this.minimaxScore;
+    // this.gameWon;
 
     playerSelectOption.addEventListener('click', this.togglePlayerLogo.bind(this));
     newGameBtn.addEventListener('click', this.newGame.bind(this));
@@ -106,6 +109,7 @@ class Game {
     if(target.childElementCount === 0 && target.getAttribute('src') === null){
       markDisplay.setAttribute('src', `assets/icon-${startSymbol}.svg`);
       target.append(markDisplay);
+      origBoard[target.id] = startSymbol;
       target.addEventListener('mouseenter', () => {
         if(target.children[0].getAttribute('src').includes('-o.svg')){
           target.children[0].setAttribute('src', `assets/icon-o-outline.svg`);
@@ -144,21 +148,28 @@ class Game {
       const markDisplay = document.createElement('img');
       setTimeout(() => {
         markDisplay.setAttribute('src', `assets/icon-${cpuSymbol}.svg`);
-        this.bestSpot().append(markDisplay);
+        gridCells[this.bestSpot()].append(markDisplay);
         infoLogo.setAttribute('src', `assets/icon-${playerSymbol}-white.svg`);
         this.checkWinner();
         humanPlayerTurn();
-      }, 3000);
+      //}, 3000);
+      //origBoard[this.bestSpot().id] = cpuSymbol;
+      origBoard.splice(
+        this.bestSpot(), 1,
+        cpuSymbol
+        )
+      }, 3000);  
     }
 
     let humanPlayerTurn = () => {
       processor.classList.add('hidden');
-      this.emptySpot().forEach(cell => cell.addEventListener('click', e => {
+      gridCells.forEach(cell => cell.addEventListener('click', e => {
         const playerMarkDisplay = document.createElement('img');
         const { target } = e;
         if(target.childElementCount === 0 && target.getAttribute('src') === null){
           playerMarkDisplay.setAttribute('src', `assets/icon-${playerSymbol}.svg`);
           target.append(playerMarkDisplay);
+          origBoard[target.id] = playerSymbol;
           infoLogo.setAttribute('src', `assets/icon-${cpuSymbol}-white.svg`);
           this.checkWinner();
           // preventing cpu play when win is detected
@@ -179,20 +190,70 @@ class Game {
   }
 
   emptySpot(){
-    const gridCells = Array.from(document.querySelectorAll('.cell'));
-    return Array.from(gridCells).filter(cell => cell.childElementCount < 1);
+    return origBoard.filter(s => typeof s === 'number');
   }
 
   bestSpot(){
-    const gridCells = document.querySelectorAll('.cell');
     const playerState = this.fetchPlayerState()
-    const cpu = playerState.cpu_symbol;
-    // console.log(this.minimax(gridCells, cpu).index)
-    // return this.minimax(gridCells, cpu).index;
-    return this.emptySpot()[0];
+    const cpu = playerState.cpu_symbol.toLowerCase();
+    return this.minimax(origBoard, cpu).index;
   }
 
-  minimax(board, player){
+  minimax(currentBoard, player){
+    const playerState = this.fetchPlayerState()
+    const cpu = playerState.cpu_symbol.toLowerCase();
+    const p1 = playerState.p1_symbol.toLowerCase();
+    let emptyCells = this.emptySpot();
+    
+   if(this.winDetected(currentBoard, p1)){
+    return { score: -10 };
+   } else if(this.winDetected(currentBoard, cpu)){
+    return { score: 10 }
+   } else if(emptyCells.length === 0){
+    return { score: 0 }
+   }
+
+    let allMoves = [];
+    for(let i = 0; i < emptyCells.length; i++){
+      let currentMove = {};
+      currentMove.index = currentBoard[emptyCells[i]];
+      currentBoard[emptyCells[i]] = player;
+
+      if(player === cpu){
+        const result = this.minimax(currentBoard, p1);
+        currentMove.score = result.score;
+      } 
+      else {
+        const result = this.minimax(currentBoard, cpu);
+        currentMove.score = result.score;
+      }
+
+      currentBoard[emptyCells[i]] = currentMove.index;
+      allMoves.push(currentMove);
+    }
+
+    let bestMove;
+    if(player === cpu){
+      let bestScore = -Infinity;
+      for(let i = 0; i < allMoves.length; i++){
+        if(allMoves[i].score > bestScore){
+          bestScore = allMoves[i].score;
+          bestMove = i;
+        }
+      }
+    } else {
+      let bestScore = Infinity;
+      for(let i = 0; i < allMoves.length; i++){
+        if(allMoves[i].score < bestScore){
+          bestScore = allMoves[i].score;
+          bestMove = i;
+        }
+      }
+    }
+    return allMoves[bestMove];
+  }
+
+  Minimax(board, player){
     const playerState = this.fetchPlayerState();
     const cpu = playerState.cpu_symbol;
     const p1 = playerState.p1_symbol;
@@ -226,7 +287,7 @@ class Game {
 
     let bestMove;
     if(player === cpu){
-      let bestScore = -1000;
+      let bestScore = -Infinity;
       for(let i = 0; i < moves.length; i++){
         if(moves[i].score > bestScore){
           bestScore = moves[i].score;
@@ -234,7 +295,7 @@ class Game {
         }
       }
     } else {
-      let bestScore = 1000;
+      let bestScore = Infinity;
       for(let i = 0; i < moves.length; i++){
         if(moves[i].score < bestScore){
           bestScore = moves[i].score;
@@ -246,7 +307,6 @@ class Game {
     return moves[bestMove];
   }
 
-  playEvent = vs_player ? this.switchTurn : this.cpuPlay
 
   initGameBoard(){
     const grid = Array(9).fill('').forEach((cell, idx) => {
@@ -469,10 +529,11 @@ class Game {
     return JSON.parse(localStorage.getItem('playerState'));
   }
 
-  checkWinner(){
+  checkWinner(player){
     this.checkRestartBeforeWin();
     const gridCells = document.querySelectorAll('.cell');
-    // let X_win, O_win;
+    let winplayer;
+    let X_win, O_win;
     // console.log(gridCells[1].children[0].getAttribute('src').includes('icon-x.svg'));
 
     const winCombinations = [
@@ -482,11 +543,11 @@ class Game {
     ];
 
     for(let combo of winCombinations){
-      let X_win = combo.every(cell => {
+      X_win = combo.every(cell => {
         return gridCells[cell].children[0]?.getAttribute('src').includes('icon-x.svg');
       });
 
-      let O_win = combo.every(cell => {
+      O_win = combo.every(cell => {
         return gridCells[cell].children[0]?.getAttribute('src').includes('icon-o.svg');
       });
 
@@ -542,10 +603,11 @@ class Game {
           }
         }
         popup.classList.remove('hidden');
-        this.minimaxScore = { score: 10 };
-        this.gameWon = true;
-        console.log(this.minimaxScore)
-        return this.minimaxScore, this.gameWon;
+        minimaxScore = { score: 10 };
+        // gameWon = true;
+        winplayer = 'x';
+        //console.log(this.minimaxScore)
+        return;
       }
       // Declaring win for O mark
       if(O_win){ 
@@ -597,10 +659,11 @@ class Game {
         }
         popup.classList.remove('hidden');
         console.log('O wins');
-        this.minimaxScore = { score: -10 };
-        this.gameWon = true;
-        console.log(this.minimaxScore)
-        return this.minimaxScore, this.gameWon;
+        minimaxScore = { score: -10 };
+        // gameWon = true;
+        winplayer = 'o';
+        //console.log(this.minimaxScore)
+        return;
       } 
     };
 
@@ -622,9 +685,9 @@ class Game {
         message2.textContent = 'Round tied';
         popup.classList.remove('hidden');
         console.log('tied score');
-        this.minimaxScore = { score: 0 };
-        this.gameWon = false;
-        return this.minimaxScore;
+        minimaxScore = { score: 0 };
+        // gameWon = false;
+        return minimaxScore;
     }
 
     popup.addEventListener('click', e => {
@@ -636,8 +699,18 @@ class Game {
         location.reload();
       }
     })
+    
+    // return {
+    //     checkTerminalState(player){
+    //     if(winplayer === player){
+    //       return player;
+    //     }
+    //   }
+    // }
 
-    return this.minimaxScore;
+    if(winplayer === player){
+          return true;
+        }
   };
 
   checkRestartBeforeWin(){
@@ -652,6 +725,62 @@ class Game {
       actionBtn1.textContent = 'Quit';
       actionBtn2.textContent = 'Next round';
     }
+  }
+
+  winDetected(board, player){
+    if(
+      (board[0] === player &&
+      board[1] === player &&
+      board[2] === player) ||
+
+      (board[3] === player &&
+      board[4] === player &&
+      board[5] === player) ||
+
+      (board[6] === player &&
+      board[7] === player &&
+      board[8] === player) ||
+
+      (board[0] === player &&
+      board[3] === player &&
+      board[6] === player) ||
+
+      (board[1] === player &&
+      board[4] === player &&
+      board[7] === player) ||
+
+      (board[0] === player &&
+      board[4] === player &&
+      board[8] === player) ||
+
+      (board[2] === player &&
+      board[4] === player &&
+      board[6] === player)
+      
+    ){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  findWin(board, player){
+    const winCombo = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+    let played = board.reduce((a, c, i) => {
+      return (c === player ? a.concat(i) : a)
+    }, [])
+    let win = null;
+    for(let [index, win] of winCombo.entries()){
+      if(win.every((elem) => played.indexOf(elem) > -1)){
+        win = { index: index, player: player };
+        break;
+      }
+    }
+    return win;
   }
 }
 
