@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;700&display=swap');
 
-// Variables
+/************Variables************/
 $blueGreen : #31C3BD;
 $lightBlueGreen : #65E9E4;
 $amber: #F2B137;
@@ -12,6 +12,7 @@ $azureishWhite: #DBE8ED;
 $bold: 700;
 
 
+/***********Mixins***********/
 // Body fonts
 @mixin body-md {
     font-size: 1.4rem;

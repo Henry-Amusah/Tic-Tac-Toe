@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@500;700&display=swap");
+/************Variables************/
+/***********Mixins***********/
 * {
   margin: 0;
   padding: 0;
@@ -161,17 +163,13 @@ html {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 4.5rem;
+}
+.container .processor .AI {
+  animation: rotate 2s linear infinite;
 }
 .container .processor img {
   width: 5rem;
   transition: all 2s ease-in;
-}
-.container .processor .loading {
-  font-size: 3rem;
-  letter-spacing: 0.5rem;
-  width: 5rem;
-  text-align: center;
 }
 .container .body {
   width: 100%;
@@ -235,7 +233,6 @@ html {
   width: 50%;
   padding: 1rem 0;
   border-radius: 1rem;
-  transition: all 0.4s;
 }
 .container .body .player-select-option .o-mark img, .container .body .player-select-option .x-mark img {
   width: 3.5rem;
@@ -307,6 +304,14 @@ html {
   background-color: #FFC860;
 }
 
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 @media screen and (max-width: 520px) {
   html {
     font-size: 55%;

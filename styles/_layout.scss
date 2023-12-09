@@ -123,18 +123,15 @@
     justify-content: center;
     flex-direction: column;
     //padding: 5rem;
-    margin-top: 4.5rem;
-    
+    // margin-top: 4.5rem;
+
+  .AI{
+    animation: rotate 2s linear infinite;
+  }
 
     img{
       width: 5rem;
       transition: all 2s ease-in;
-    }
-    .loading{
-      font-size: 3rem;
-      letter-spacing: .5rem;
-      width: 5rem;
-      text-align: center;
     }
   }
 
@@ -203,7 +200,6 @@
         width: 50%;
         padding: 1rem 0;
         border-radius: 1rem;
-        transition: all 0.4s;
           
       img{
         width: 3.5rem;
@@ -271,6 +267,16 @@
       @include shadow($color: darken($amber, 18));
       @include hover($lightAmber);
     }
+  }
+}
+
+@keyframes rotate{
+  0%{
+    transform: rotate(0deg);
+  }
+
+  100%{
+    transform: rotate(360deg);
   }
 }
 
